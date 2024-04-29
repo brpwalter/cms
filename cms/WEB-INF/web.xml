@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+
+<web-app>
+    <context-param>
+	<param-name>DatabaseDriver</param-name>
+	<param-value>org.gjt.mm.mysql.Driver</param-value>
+    </context-param>
+    <context-param>
+	<param-name>DatabaseURL</param-name>
+	<param-value>jdbc:mysql://localhost:3306/servlets</param-value>
+    </context-param>
+    <context-param>
+	<param-name>DatabaseUser</param-name>
+	<param-value>servlets</param-value>
+    </context-param>
+    <context-param>
+	<param-name>DatabasePassword</param-name>
+	<param-value>geheim</param-value>
+    </context-param>
+    <context-param>
+	<param-name>DatabaseTable</param-name>
+	<param-value>news</param-value>
+    </context-param>
+
+    <servlet>
+      <servlet-name>BlobServlet</servlet-name>
+      <servlet-class>de.infocrew.cms.BlobServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>BlobServlet</servlet-name>
+      <url-pattern>/blob/*</url-pattern>
+    </servlet-mapping>
+
+
+    <security-constraint>
+      <web-resource-collection>
+        <web-resource-name>Content Management System</web-resource-name>
+        <url-pattern>/news/admin/*</url-pattern>
+      </web-resource-collection>
+      <auth-constraint>
+        <role-name>admin</role-name>
+      </auth-constraint>
+    </security-constraint>
+
+
+    <login-config>
+      <auth-method>BASIC</auth-method>
+      <realm-name>Content Management System</realm-name>
+    </login-config>
+
+
+    <security-role>
+        <role-name>admin</role-name>
+    </security-role>
+
+
+</web-app>

@@ -1,0 +1,52 @@
+<project name="cms" default="make_war" basedir=".">   
+<property name="src" value="."/>
+
+<!-- Diese Property spezifiert die Quelle der jar-Datei der
+     Servlet API (servlet.jar). Bei Tomcat 4.0 befindet sich diese
+     im Installationsverzeichnis common/lib -->
+<property name="servlet_api" value="/opt/jakarta-tomcat/common/lib/servlet.jar"/>
+
+<!-- Diese Property gibt an, wo sich die spaetere Webapplication zu diesem
+     Kapitel befinden soll. Am besten erstellt man dies war-Datei gleich
+     im entsprechenden Verzeichnis des Servlet-Containers.-->
+<property name="war" value="/opt/jakarta-tomcat/webapps/cms.war"/>
+
+
+<!-- Dieses Element definiert den benoetigten CLASSPATH
+     welcher zum kompilieren der Webapplication benoetigt wird.
+     Er beinhaltet alle jar-Dateien im WEB-INF/lib Verzeichnis
+     oder einem Unterverzeichnis davon.
+     Desweiteren wird die jar-Datein des Servlet-API eingebunden.
+     Deren Quelle wird in der Property mit dem Namen "servlet_api"
+     zu Beginn dieser Datei spezifiziert.-->
+<path id="cms.classpath">
+      <fileset dir="${src}/WEB-INF/lib">
+        <include name="**/*.jar"/>
+      </fileset>
+      <pathelement location="${servlet_api}"/>
+</path>
+
+<!-- Dieses Ziel besitzt hoechste Prioritaet und wird somit als erstes
+     ausgefuehrt. In ihm werden alle benoetigten java-Dateien kompiliert.-->
+<target name="compile">
+	<javac srcdir="${src}/WEB-INF/classes" destdir="${src}/WEB-INF/classes">
+		<classpath refid="cms.classpath"/>
+	</javac>
+</target>
+
+<!-- Dieses Ziel wird beim Start ausgefuehrt und fasst alle fuer die
+     Webapplication benoetigten Dateien (ohne sourcen) in
+     einer war-Datein zusammen und legt diese Datei
+     im in der property "war" angegebenen Pfad ab-->
+<target name="make_war" depends="compile">
+        <war warfile="${war}" webxml="${src}/WEB-INF/web.xml">
+		<fileset dir="${src}/misc" excludes="**/*.sql"/>
+		<lib dir="${src}/WEB-INF/lib/"/>
+   	        <zipfileset dir="${src}/news" prefix="news"/>
+   	        <zipfileset dir="${src}/images" prefix="images"/>
+		<classes dir="${src}/WEB-INF/classes"
+			includes="**/*.class"/>
+	</war>
+</target>
+
+</project>
